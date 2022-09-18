@@ -1,3 +1,4 @@
+using airport_api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace airport_api.Controllers;
@@ -7,15 +8,18 @@ namespace airport_api.Controllers;
 public class AirportController : ControllerBase
 {
     private readonly ILogger<AirportController> _logger;
-
-    public AirportController(ILogger<AirportController> logger)
+    private readonly IAirportInfoService _airportInfoService;
+    public AirportController(ILogger<AirportController> logger, 
+        IAirportInfoService airportInfoService)
     {
         _logger = logger;
+        _airportInfoService = airportInfoService;
     }
 
     [HttpGet(Name = "GetDistance")]
-    public string GetDistance()
+    public async Task<string> GetDistance()
     {
-        return string.Empty;
+        var response = await _airportInfoService.GetAirportInfo("AMS");
+        return response.Name ?? string.Empty;
     }
 }
