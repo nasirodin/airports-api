@@ -5,14 +5,14 @@ namespace airport_api.Services;
 
 public static class Extensions
 {
-    public static void AddServices(this IServiceCollection services)
+    public static void AddServices(this WebApplicationBuilder builder)
     {
-        services.AddSingleton<ICteleportApi, CteleportApi>();
-        services.AddSingleton<IAirportService, AirportService>();
-        services.AddSingleton<IAirportInfoCache, AirportInfoCache>();
+        builder.Services.AddSingleton<ICteleportApi, CteleportApi>();
+        builder.Services.AddSingleton<IAirportService, AirportService>();
+        builder.Services.AddSingleton<IAirportInfoCache, AirportInfoCache>();
         
-        // todo : read api base address from config
-        services.AddHttpClient<ICteleportApi, CteleportApi>(client => { client.BaseAddress = new Uri("https://places-dev.cteleport.com/airports/"); })
+        var apiUrl = builder.Configuration.GetValue<string>("CteleportApiUrl");
+        builder.Services.AddHttpClient<ICteleportApi, CteleportApi>(client => { client.BaseAddress = new Uri(apiUrl); })
             .SetHandlerLifetime(TimeSpan.FromMinutes(5))
             .AddPolicyHandler(GetRetryPolicy());
     }

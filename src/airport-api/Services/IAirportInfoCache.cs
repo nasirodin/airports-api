@@ -5,5 +5,5 @@ namespace airport_api.Services;
 public interface IAirportInfoCache
 {
     Task<AirportInfoResponse?> Get(IataCode iata);
-    Task Set(AirportInfoResponse airportInfo);
+    Task Set(AirportInfoResponse airportInfo,TimeSpan? absoluteExpireTime = null, TimeSpan? slidingExpireTime = null);
 }
