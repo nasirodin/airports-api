@@ -6,7 +6,7 @@ public class IataCode
 
     public IataCode(string code)
     {
-        Code = code ?? string.Empty;
+        Code = (code ?? string.Empty).ToUpper();
     }
 
     public bool IsValid()
