@@ -2,19 +2,20 @@
 
 namespace airport_api.Services;
 
-public class AirportInfoService : IAirportInfoService
+public class CteleportApi : ICteleportApi
 {
     private readonly HttpClient _httpClient;
 
-    public AirportInfoService(HttpClient httpClient)
+    public CteleportApi(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
-    public async Task<AirportInfoResponse> GetAirportInfo(string iata)
+    public async Task<AirportInfoResponse?> GetAirportInfo(IataCode iata)
     {
-        // todo : validate IATA code
-        var response = await _httpClient.GetAsync($"{iata}");
+        if (iata.IsValid() == false) return null;
+
+            var response = await _httpClient.GetAsync($"{iata.Code}");
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();

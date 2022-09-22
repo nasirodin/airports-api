@@ -45,4 +45,6 @@ public sealed class AirportInfoResponse
     
     [JsonProperty("hubs")]
     public int Hubs { get; set; }
+
+    public static AirportInfoResponse Default => new AirportInfoResponse { Location = new Location() };
 }

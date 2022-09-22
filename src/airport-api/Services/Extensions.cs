@@ -7,9 +7,12 @@ public static class Extensions
 {
     public static void AddServices(this IServiceCollection services)
     {
-        services.AddSingleton<IAirportInfoService, AirportInfoService>();
+        services.AddSingleton<ICteleportApi, CteleportApi>();
+        services.AddSingleton<IAirportService, AirportService>();
+        services.AddSingleton<IAirportInfoCache, AirportInfoCache>();
+        
         // todo : read api base address from config
-        services.AddHttpClient<IAirportInfoService, AirportInfoService>(client => { client.BaseAddress = new Uri("https://places-dev.cteleport.com/airports/"); })
+        services.AddHttpClient<ICteleportApi, CteleportApi>(client => { client.BaseAddress = new Uri("https://places-dev.cteleport.com/airports/"); })
             .SetHandlerLifetime(TimeSpan.FromMinutes(5))
             .AddPolicyHandler(GetRetryPolicy());
     }
@@ -19,7 +22,6 @@ public static class Extensions
         return HttpPolicyExtensions
             .HandleTransientHttpError()
             .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
-            .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,
-                retryAttempt)));
+            .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
     }
 }
