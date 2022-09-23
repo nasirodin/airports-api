@@ -2,6 +2,8 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0  as build
 WORKDIR /app
 COPY /src .
 RUN dotnet restore
+RUN dotnet build
+RUN dotnet test
 RUN dotnet publish -c release -o published-app
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 as runtime

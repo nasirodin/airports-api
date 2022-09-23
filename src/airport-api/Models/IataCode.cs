@@ -1,4 +1,6 @@
-﻿namespace airport_api.Models;
+﻿using airport_api.Exceptions;
+
+namespace airport_api.Models;
 
 public class IataCode
 {
@@ -11,7 +13,7 @@ public class IataCode
 
     public bool IsValid()
     {
-        return Code.Length == 3;
+        return Code.Length == 3 && Code.All(c=>char.IsLetter(c));
     }
 
     public override bool Equals(object? obj)
@@ -22,7 +24,7 @@ public class IataCode
 
     public void EnsureIsValid()
     {
-        if (IsValid() == false) throw new Exception($"IATA Code is not valid : {Code}");
+        if (IsValid() == false) throw new InvalidIataCodeException(Code);
     }
     
     public override int GetHashCode()
